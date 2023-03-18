@@ -8,6 +8,8 @@ import { api } from "~/utils/api";
 const Home: NextPage = () => {
   const hello = api.example.hello.useQuery({ text: "from tRPC" });
 
+  const { data: allquery} = api.example.getAll.useQuery();
+
   return (
     <>
       <Head>
@@ -48,6 +50,9 @@ const Home: NextPage = () => {
             <p className="text-2xl text-white">
               {hello.data ? hello.data.greeting : "Loading tRPC query..."}
             </p>
+            {allquery?.map(function(item, i){
+              return <p key={i}>item {item.id} at {item.createdAt.toString()}</p>
+            })}
             <AuthShowcase />
           </div>
         </div>
