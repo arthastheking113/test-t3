@@ -1,3 +1,4 @@
+import { Example } from "@prisma/client";
 import { z } from "zod";
 
 import {
@@ -18,7 +19,8 @@ export const exampleRouter = createTRPCRouter({
 
   getAll: publicProcedure.query(async () => {
     //await prisma.example.create({ data: { updatedAt: new Date()}});
-    return await prisma.example.findMany();
+    //return await prisma.example.findMany();
+    return await prisma.$queryRaw<Example[]>`SELECT * FROM Example`;
   }),
 
   getSecretMessage: protectedProcedure.query(() => {
