@@ -1,4 +1,4 @@
-import { Example } from "@prisma/client";
+import { type Example } from "@prisma/client";
 import { z } from "zod";
 
 import {
