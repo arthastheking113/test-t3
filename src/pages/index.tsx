@@ -50,8 +50,9 @@ const Home: NextPage = () => {
             <p className="text-2xl text-white">
               {hello.data ? hello.data.greeting : "Loading tRPC query..."}
             </p>
+            <p className="text-2xl text-white">Random data query from database using trpc: </p>
             {allquery?.map(function(item, i){
-              return <p key={i}>item {item.id} at {item.createdAt.toString()}</p>
+              return <p className="text-sm text-white" key={i}>item {item.id} at {item.createdAt.toString()}</p>
             })}
             <AuthShowcase />
           </div>
@@ -74,9 +75,18 @@ const AuthShowcase: React.FC = () => {
   return (
     <div className="flex flex-col items-center justify-center gap-4">
       <p className="text-center text-2xl text-white">
-        {sessionData && <span>Logged in as {sessionData.user?.name}</span>}
+        {sessionData && <span>Logged in as User Name: {sessionData.user?.name} - Email: {sessionData.user?.email} - Role: {sessionData.user?.role}</span>}
         {secretMessage && <span> - {secretMessage}</span>}
       </p>
+      {(() => {
+        if (sessionData?.user.role == "admin") {
+          return (
+            <Link className="btn btn-primary text-white" href="/admin">
+            Only admin can see this line. Click here go to admin page
+          </Link>
+          )
+        }
+      })()}
       <button
         className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
         onClick={sessionData ? () => void signOut() : () => void signIn()}
