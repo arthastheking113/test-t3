@@ -81,9 +81,16 @@ const AuthShowcase: React.FC = () => {
       {(() => {
         if (sessionData?.user.role == "admin") {
           return (
-            <Link className="btn btn-primary text-white" href="/admin">
-            Only admin can see this line. Click here go to admin page
-          </Link>
+            <>
+              <Link className="btn btn-primary text-white" href="/admin">
+                Only admin can see this line. Click here go to admin page
+              </Link>
+
+              <Link className="btn btn-primary text-white" href="/role">
+                Manage User Role
+              </Link>
+            </>
+            
           )
         }
       })()}
