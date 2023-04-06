@@ -19,7 +19,7 @@ export const userRouter = createTRPCRouter({
     userId: z.string(),
     role: z.string() 
   }))
-  .query(async ({ input }) => {
+  .mutation(async ({ input }) => {
     
     await prisma.user.update({
       where: {

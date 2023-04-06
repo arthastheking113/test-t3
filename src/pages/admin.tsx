@@ -1,11 +1,12 @@
 // pages/admin.tsx
 import Link from "next/link";
-import { signOut, useSession } from "next-auth/react";
-import { CheckIfAdmin } from "~/utils/adminAuth";
+import { signOut, signIn, useSession } from "next-auth/react";
 
 const AdminPage = () => {
-    const { data: sessionData } = useSession();
-    CheckIfAdmin(sessionData);
+    const { data: sessionData } = useSession({ required: true,
+        onUnauthenticated() {
+            void signIn();
+        },});
     return (
         
         <div className="bg-gradient-to-b from-[#2e026d] to-[#15162c]">

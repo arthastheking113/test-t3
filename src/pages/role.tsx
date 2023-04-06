@@ -3,13 +3,33 @@ import Head from "next/head";
 import Link from "next/link";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { api } from "~/utils/api";
-import { CheckIfAdmin } from "~/utils/adminAuth";
 import { User } from "@prisma/client";
 
+type Option = {
+  id: number,
+  name: string,
+  value: string
+}
+const options: Array<Option> = [{ id: 1, name: 'Admin', value: 'admin'},{ id: 2, name: 'Developer', value: 'developer'}]
+interface RowProps {
+  onChangeHandler: (userId: string, role: string) => void
+  user: User
+}
 const ManageUserRole: NextPage = () => {
-  const { data: sessionData } = useSession();
-  CheckIfAdmin(sessionData);
+  const { data: sessionData } = useSession({ required: true,
+    onUnauthenticated() {
+        void signIn();
+    },});
   const { data: allquery} = api.user.getAll.useQuery();
+
+  // https://stackoverflow.com/questions/74830632/trpc-invalid-hook-call-in-react-function-component
+  // useMutation is a hook, so you can't call it conditionally. Once you create the mutation, you can use its mutate to fire it.
+  const updateUser = api.user.update.useMutation();
+  const onChange = (userId:string, role: string) => {
+    updateUser.mutate({userId: userId, role: role});
+  }
+
+
   return (
     <>
       <div className="bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
@@ -32,7 +52,7 @@ const ManageUserRole: NextPage = () => {
                         <tbody>
                           {allquery?.map(function(item, i){
                             return (
-                              <Row key={i} user={item}/>
+                              <Row key={i} user={item} onChangeHandler={onChange}/>
                             )
                           })}
                         </tbody>
@@ -49,41 +69,27 @@ const ManageUserRole: NextPage = () => {
 
 export default ManageUserRole;
 
-interface UserProps {
-  user: User
-}
-type Option = {
-  id: number,
-  name: string,
-  value: string
-}
-const options: Array<Option> = [{ id: 1, name: 'Admin', value: 'admin'},{ id: 2, name: 'Developer', value: 'developer'}]
-const Row: React.FC<UserProps> = ({user}: UserProps) => {
-
-  const onChange = (value: string) => {
-    api.user.update.useQuery({ userId: user.id, role: value });
-  };
-
+const Row: React.FC<RowProps> = (props: RowProps) => {
+  
   return (
     <tr className="border-b dark:border-neutral-500">
-      <td className="whitespace-nowrap px-6 py-4 font-medium">{user.name}</td>
-      <td className="whitespace-nowrap px-6 py-4">{user.email}</td>
+      <td className="whitespace-nowrap px-6 py-4 font-medium">{props.user.name}</td>
+      <td className="whitespace-nowrap px-6 py-4">{props.user.email}</td>
       <td className="whitespace-nowrap px-6 py-4">
         <select
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(e) => props.onChangeHandler(props.user.id, e.target.value)}
           className={"bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"}
-          required={false}
         >
-          {<option disabled selected={user.role == null || user.role == ""} value="">
+          {<option disabled selected={props.user.role == null || props.user.role == ""} value="">
               Choose a role
             </option>}
 
           {options.map((option) => (
             <option
               key={option.id || option.value}
-              value={option.id || option.value}
-              selected={user.role === option.value}
-              disabled={user.role === "admin"}
+              value={option.value}
+              selected={props.user.role === option.value}
+              disabled={props.user.role === "admin"}
             >
               {option.name}
             </option>
