@@ -5,16 +5,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { api } from "~/utils/api";
 import { User } from "@prisma/client";
 
-type Option = {
-  id: number,
-  name: string,
-  value: string
-}
-const options: Array<Option> = [{ id: 1, name: 'Admin', value: 'admin'},{ id: 2, name: 'Developer', value: 'developer'}]
-interface RowProps {
-  onChangeHandler: (userId: string, role: string) => void
-  user: User
-}
+
 const ManageUserRole: NextPage = () => {
   const { data: sessionData } = useSession({ required: true,
     onUnauthenticated() {
@@ -68,6 +59,17 @@ const ManageUserRole: NextPage = () => {
 };
 
 export default ManageUserRole;
+
+type Option = {
+  id: number,
+  name: string,
+  value: string
+}
+const options: Array<Option> = [{ id: 1, name: 'Admin', value: 'admin'},{ id: 2, name: 'Developer', value: 'developer'}]
+interface RowProps {
+  onChangeHandler: (userId: string, role: string) => void
+  user: User
+}
 
 const Row: React.FC<RowProps> = (props: RowProps) => {
   
