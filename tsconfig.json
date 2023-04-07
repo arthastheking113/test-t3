@@ -28,7 +28,6 @@
     "**/*.tsx",
     "**/*.cjs",
     "**/*.mjs",
-    "middleware.page.ts"
   ],
   "exclude": ["node_modules"]
 }

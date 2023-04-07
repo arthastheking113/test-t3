@@ -4,15 +4,22 @@ import Link from "next/link";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { api } from "~/utils/api";
 import { User } from "@prisma/client";
+import { useRouter } from 'next/navigation';
+import { useEffect } from "react";
 
 
 const ManageUserRole: NextPage = () => {
+  const router = useRouter();
   const { data: sessionData } = useSession({ required: true,
     onUnauthenticated() {
-      if(sessionData?.user?.role != "admin"){
-          void signIn();
-      }
+        void signIn();
     },});
+
+  useEffect(() => {
+      if(sessionData?.user?.role != "admin"){
+          router.push("/403");
+      }
+  }, []);
   const { data: allquery} = api.user.getAll.useQuery();
 
   // https://stackoverflow.com/questions/74830632/trpc-invalid-hook-call-in-react-function-component
@@ -52,7 +59,7 @@ const ManageUserRole: NextPage = () => {
                       </table>
                   </div>
                 </div>
-              </div>              
+              </div>
           </div>
       </div>
       

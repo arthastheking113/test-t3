@@ -66,12 +66,10 @@ export default Home;
 const AuthShowcase: React.FC = () => {
   const { data: sessionData } = useSession();
   const [content, setContent] = useState("");
-  const [todoList, setTodoList] = useState<Example[] | undefined>([]);
   const {data: allTodo, status } = api.example.getAll.useQuery(
     { userId: sessionData?.user?.id }, 
     { enabled: sessionData?.user !== undefined });
   const ctx = api.useContext();
-  // setTodoList(allTodo);
 
   const { data: secretMessage } = api.example.getSecretMessage.useQuery(
     undefined, // no input

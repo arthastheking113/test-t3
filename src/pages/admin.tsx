@@ -1,14 +1,21 @@
 // pages/admin.tsx
 import Link from "next/link";
+import { useRouter } from 'next/navigation';
 import { signOut, signIn, useSession } from "next-auth/react";
+import { useEffect } from "react";
 
 const AdminPage = () => {
+    const router = useRouter();
     const { data: sessionData } = useSession({ required: true,
         onUnauthenticated() {
-            if(sessionData?.user?.role != "admin"){
-                void signIn();
-            }
+            void signIn();
         },});
+
+    useEffect(() => {
+        if(sessionData?.user?.role != "admin"){
+            router.push("/403");
+        }
+    }, []);
     return (
         
         <div className="bg-gradient-to-b from-[#2e026d] to-[#15162c]">
