@@ -5,7 +5,9 @@ import { signOut, signIn, useSession } from "next-auth/react";
 const AdminPage = () => {
     const { data: sessionData } = useSession({ required: true,
         onUnauthenticated() {
-            void signIn();
+            if(sessionData?.user?.role != "admin"){
+                void signIn();
+            }
         },});
     return (
         

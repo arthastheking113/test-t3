@@ -9,7 +9,9 @@ import { User } from "@prisma/client";
 const ManageUserRole: NextPage = () => {
   const { data: sessionData } = useSession({ required: true,
     onUnauthenticated() {
-        void signIn();
+      if(sessionData?.user?.role != "admin"){
+          void signIn();
+      }
     },});
   const { data: allquery} = api.user.getAll.useQuery();
 
@@ -65,7 +67,13 @@ type Option = {
   name: string,
   value: string
 }
-const options: Array<Option> = [{ id: 1, name: 'Admin', value: 'admin'},{ id: 2, name: 'Developer', value: 'developer'}]
+const options: Array<Option> = [
+  { id: 1, name: 'Admin', value: 'admin'},
+  { id: 2, name: 'Developer', value: 'developer'}, 
+  { id: 3, name: 'QA', value: 'qa'},
+  { id: 4, name: 'Random Role', value: 'randomRole'},
+  { id: 5, name: 'Bob', value: 'bob'}
+]
 interface RowProps {
   onChangeHandler: (userId: string, role: string) => void
   user: User
