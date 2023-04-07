@@ -1,8 +1,12 @@
-# Create T3 App
+# Create T3 App with a Todo List feature
+
+App Url: https://test-t3-lime.vercel.app/
 
 This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
 
 ## What's next? How do I make an app with this?
+
+This project has basic authorization and role-based authentication with a simple Todo List functionality.
 
 We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
 
